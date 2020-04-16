@@ -1,24 +1,21 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data.SqlClient;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace PasswordManager
 {
-    class DatabaseWrap
+    internal class DatabaseWrap
     {
-        SqlConnection connection = null;
-        SqlCommand query = null;
-        DatabaseWrap()
+        private SqlConnection connection = null;
+        private SqlCommand query = null;
+
+        private DatabaseWrap()
         {
-            ConnectoToDatabase();
+            ConnectToDatabase();
         }
 
         public void AddUser(User newUser)
         {
-
+            string query;
         }
 
         public bool VerifyUser(User user)
@@ -36,7 +33,7 @@ namespace PasswordManager
             //TODO
         }
 
-        private void ConnectoToDatabase()
+        private void ConnectToDatabase()
         {
             connection = new SqlConnection("Data Source=(local);Initial Catalog=Northwind;Integrated Security=SSPI");
             connection.Open();
@@ -53,29 +50,48 @@ namespace PasswordManager
             query = new SqlCommand(queryText, connection);
             return query.ExecuteReader();
         }
-         public void AddData(Data newData)
-        {
 
+        public void AddData(Data newData)
+        {
+            string query;
         }
 
         public void ModifyData(int id)
         {
-
+            string query;
         }
-        
+
         public void DeleteData(int id)
         {
-
+            string query;
         }
 
         public ListOfDatas ShowData()
         {
-
+            ListOfDatas list = new ListOfDatas();
+            string query = "SELECT login, pass, tag, notes FROM dbo.data;";
+            SqlDataReader response = SendQuery(query);
+            while (response.HasRows)
+            {
+                list.Add(new Data(response.GetString(0), response.GetString(1), response.GetString(2), response.GetString(3)));
+                response.NextResult();
+            }
+            response.Close();
+            return list;
         }
 
-        public Data SearchData(String searchedTag)
+        public ListOfDatas SearchData(String searchedTag)
         {
-
+            string query = "SELECT login, pass, tag, notes FROM dbo.data WHERE tag ='"+ searchedTag +"';";
+            ListOfDatas list = new ListOfDatas();
+            SqlDataReader response = SendQuery(query);
+            while (response.HasRows)
+            {
+                list.Add(new Data(response.GetString(0), response.GetString(1), response.GetString(2), response.GetString(3)));
+                response.NextResult();
+            }
+            response.Close();
+            return list;
         }
     }
 }

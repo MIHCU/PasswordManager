@@ -10,7 +10,7 @@ namespace PasswordManager
     {
         List<Data> listOfDatas;
 
-        ListOfDatas()
+        public ListOfDatas()
         {
             listOfDatas = new List<Data>();
         }
