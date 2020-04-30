@@ -4,9 +4,50 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:PasswordManager.Views"
+        xmlns:models="clr-namespace:PasswordManager.Models"
+        xmlns:cal="http://www.caliburnproject.org"
         mc:Ignorable="d"
         Title="ShellView" Height="450" Width="800">
     <Grid>
-        
+        <Grid.RowDefinitions>
+            <RowDefinition Height="15"/>
+            <RowDefinition Height="20"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="20"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="20"/>
+            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="20"/>
+        </Grid.ColumnDefinitions>
+
+
+        <TreeView x:Name="Categories" Grid.Row="3" Grid.Column="1" Margin="0,0,10,0" 
+                  cal:Message.Attach="[Event SelectedItemChanged] = [Action SayHello($this.SelectedItem)]">
+            <TreeView.ItemTemplate>
+                <HierarchicalDataTemplate DataType="{x:Type models:CategoriesModel}" ItemsSource="{Binding Categories}">
+                    <TextBlock  Text="{Binding Path=Name}" Padding="0,0,30,0"/>
+                </HierarchicalDataTemplate>
+            </TreeView.ItemTemplate>
+        </TreeView >
+
+
+        <DataGrid x:Name="Passwords" Grid.Row="3" Grid.Column="2" CanUserAddRows="False" 
+                  AutoGenerateColumns="False" IsReadOnly="True" SelectionMode="Single" >
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Tag" Binding="{Binding Path=tag}"/>
+                <DataGridTextColumn Header="Login" Binding="{Binding Path=login}"/>
+                <DataGridTextColumn  Header="Password" Binding="{Binding Path=dots}" FontSize="14"/>
+                <DataGridTextColumn Header="Notes" Binding="{Binding Path=notes}"/>
+            </DataGrid.Columns>
+            <DataGrid.ContextMenu>
+                <ContextMenu>
+                    <MenuItem Header="Coppy Password" cal:Message.Attach="CoppyPasswordToClipboard()"/>
+                    <MenuItem Header="Coppy Login" cal:Message.Attach="CoppyLoginToClipboard()"/>
+                </ContextMenu>
+            </DataGrid.ContextMenu>
+        </DataGrid>
     </Grid>
 </Window>
