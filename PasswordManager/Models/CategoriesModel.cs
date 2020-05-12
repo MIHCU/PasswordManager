@@ -11,6 +11,8 @@ namespace PasswordManager.Models
     public class CategoriesModel
     {
         private string name;
+        private CategoriesModel parent = null;
+        private ObservableCollection<CategoriesModel> categories { get; set; }
         public CategoriesModel()
         {
             this.Categories = new ObservableCollection<CategoriesModel>();
@@ -22,7 +24,22 @@ namespace PasswordManager.Models
             set { name = value; }
         }
 
-        public ObservableCollection<CategoriesModel> Categories { get; set; }
+        public CategoriesModel Parent
+        {
+            get { return parent; }
+            set { parent = value; }
+        }
+
+        public ObservableCollection<CategoriesModel> Categories
+        {
+            get { return categories; }
+            set
+            {
+                categories = value;
+                Parent = this;
+            }
+        }
+
         public BindableCollection<PasswordModel> passwords { get; set; }
        
     }

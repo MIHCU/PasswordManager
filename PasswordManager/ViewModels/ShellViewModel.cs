@@ -28,13 +28,12 @@ namespace PasswordManager.ViewModels
             asdf.Add(new PasswordModel { password = "ccc", login = "cos", notes = "i", tag = "qwer" });
             asdf.Add(new PasswordModel { password = "password7", login = "ktos", notes = "asdasdasd", tag = "ppp" });
 
-            Categories.Add(new CategoriesModel() { Name = "root" });
-            CategoriesModel childCategory = new CategoriesModel() { Name = "cos" };
-            CategoriesModel root = new CategoriesModel() { Name = "root" };
-            childCategory.Categories.Add(new CategoriesModel() { Name = "ktos", passwords = Passwords});
+            CategoriesModel childCategory = new CategoriesModel() { Name = "root", Parent = null };
+            CategoriesModel root = new CategoriesModel() { Name = "cos" };
+            root.Parent = childCategory;
+            childCategory.Categories.Add(new CategoriesModel() { Name = "ktos", passwords = Passwords, Parent = childCategory});
             childCategory.Categories.Add(root);
             childCategory.passwords = asdf;
-            Categories.Add(childCategory);
             Categories.Add(childCategory);
         }
 
@@ -60,6 +59,7 @@ namespace PasswordManager.ViewModels
             set
             {
                 _selectedCategorie = value;
+                if(SelectedCategorie != null)
                 Passwords = SelectedCategorie.passwords;
                 NotifyOfPropertyChange(() => SelectedCategorie);
             }
@@ -88,9 +88,29 @@ namespace PasswordManager.ViewModels
             Clipboard.SetText(_selectedPassword.login);
         }
 
-        public void SayHello(object asd)
+        public void setSelectedCategory(object item)
         {
-            SelectedCategorie = (CategoriesModel)asd;
+            SelectedCategorie = (CategoriesModel)item;
+        }
+
+        public void DeleteCategory()
+        {
+            MessageBoxResult result = MessageBoxResult.No;
+            if(SelectedCategorie.Parent != null)
+            result = MessageBox.Show("Are you sure that you would like to delete the category?", "Delete the category",
+                MessageBoxButton.YesNo, MessageBoxImage.Question);
+
+            if (result == MessageBoxResult.Yes)
+                SelectedCategorie.Parent.Categories.Remove(SelectedCategorie);
+        }
+
+        public void DeleteEntry()
+        {
+            var result = MessageBox.Show("Are you sure that you would like to delete the entry?", "Delete the entry", 
+                MessageBoxButton.YesNo, MessageBoxImage.Question);
+
+            if(result == MessageBoxResult.Yes)
+            Passwords.Remove(SelectedPassword);
         }
     }
 }
