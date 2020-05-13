@@ -18,7 +18,9 @@ namespace PasswordManager.ViewModels
         
         public ShellViewModel()
         {
-            ActivateItem(new MainViewModel());
+            ActivateItem(new EntryViewModel());
         }
+
+
     }
 }
