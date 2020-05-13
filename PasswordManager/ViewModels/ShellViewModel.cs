@@ -15,18 +15,27 @@ namespace PasswordManager.ViewModels
 {
     public class ShellViewModel : Screen
     {
+        private DatabaseWrap databse;
         private BindableCollection<PasswordModel> _passwords = new BindableCollection<PasswordModel>();
         private ObservableCollection<CategoriesModel> _categories = new ObservableCollection<CategoriesModel>();
         private PasswordModel _selectedPassword;
         private CategoriesModel _selectedCategorie;
         private BindableCollection<PasswordModel> asdf = new BindableCollection<PasswordModel>();
+        private ListOfDatas dataList;
         public ShellViewModel()
         {
-            Passwords.Add(new PasswordModel { password = "password1", login = "asdf", notes = "notes1", tag = "hello" });
-            Passwords.Add(new PasswordModel { password = "password2", login = "log1", notes = "dagjhafgjhjkdfg", tag = "dsaasdasasdf" });
-            Passwords.Add(new PasswordModel { password = "password3", login = "emil", notes = "124325", tag = "adsfasdf" });
-            asdf.Add(new PasswordModel { password = "ccc", login = "cos", notes = "i", tag = "qwer" });
-            asdf.Add(new PasswordModel { password = "password7", login = "ktos", notes = "asdasdasd", tag = "ppp" });
+            databse = new DatabaseWrap();
+            dataList = databse.GetData();
+            for(int i = 0; i < dataList.Size(); i++)
+            {
+                Data temp = dataList.Give(i);
+                Passwords.Add(new PasswordModel { password = temp.Password, login = temp.Login, notes = temp.Notes, tag = temp.Tag });
+            }
+           
+            //Passwords.Add(new PasswordModel { password = "password2", login = "log1", notes = "dagjhafgjhjkdfg", tag = "dsaasdasasdf" });
+            //Passwords.Add(new PasswordModel { password = "password3", login = "emil", notes = "124325", tag = "adsfasdf" });
+            //asdf.Add(new PasswordModel { password = "ccc", login = "cos", notes = "i", tag = "qwer" });
+            //asdf.Add(new PasswordModel { password = "password7", login = "ktos", notes = "asdasdasd", tag = "ppp" });
 
             CategoriesModel childCategory = new CategoriesModel() { Name = "root", Parent = null };
             CategoriesModel root = new CategoriesModel() { Name = "cos" };
