@@ -40,7 +40,8 @@
                         <MenuItem Header="Coppy Password" cal:Message.Attach="CoppyPasswordToClipboard()"/>
                         <MenuItem Header="Coppy Login" cal:Message.Attach="CoppyLoginToClipboard()"/>
                         <MenuItem Header="Delete Entry" cal:Message.Attach="DeleteEntry()"/>
-                    </ContextMenu>
+                        <MenuItem Header="Add Entry" cal:Message.Attach="AddEntry()"/>
+                </ContextMenu>
                 </DataGrid.ContextMenu>
             </DataGrid>
         

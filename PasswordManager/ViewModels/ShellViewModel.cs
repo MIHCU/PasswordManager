@@ -13,14 +13,25 @@ using System.Runtime.CompilerServices;
 
 namespace PasswordManager.ViewModels
 {
-    public class ShellViewModel : Conductor<object>
+    public class ShellViewModel : Conductor<object>, IHandle<ChangeToMainView>, IHandle<ChangeToEntryView>
     {
-        
-        public ShellViewModel()
+        private readonly IEventAggregator _eventAggregator;
+
+        public ShellViewModel(IEventAggregator eventAggregator)
         {
-            ActivateItem(new EntryViewModel());
+            _eventAggregator = eventAggregator;
+            _eventAggregator.Subscribe(this);
+            ActivateItem(new EntryViewModel(_eventAggregator));
         }
 
+        public void Handle(ChangeToMainView message)
+        {
+            ActivateItem(new MainViewModel(_eventAggregator));
+        }
 
+        public void Handle(ChangeToEntryView message)
+        {
+            ActivateItem(new EntryViewModel(_eventAggregator));
+        }
     }
 }

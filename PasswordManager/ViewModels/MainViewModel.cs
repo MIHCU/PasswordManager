@@ -19,8 +19,10 @@ namespace PasswordManager.ViewModels
         private CategoriesModel _selectedCategorie;
         private BindableCollection<PasswordModel> asdf = new BindableCollection<PasswordModel>();
         private ListOfDatas dataList;
-        public MainViewModel()
+        private readonly IEventAggregator _eventAggregator;
+        public MainViewModel(IEventAggregator eventAggregator)
         {
+            _eventAggregator = eventAggregator;
             /*databse = new DatabaseWrap();
             dataList = databse.GetData();
             for (int i = 0; i < dataList.Size(); i++)
@@ -119,6 +121,10 @@ namespace PasswordManager.ViewModels
 
             if (result == MessageBoxResult.Yes)
                 Passwords.Remove(SelectedPassword);
+        }
+        public void AddEntry()
+        {
+            _eventAggregator.PublishOnUIThread(new ChangeToEntryView());
         }
     }
 }
