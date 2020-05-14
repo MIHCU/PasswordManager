@@ -14,12 +14,5 @@
             this.Tag = Tag;
             this.Notes = Notes;
         }
-
-        public Data(string Login, string Password, string Tag)
-        {
-            this.Login = Login;
-            this.Password = Password;
-            this.Tag = Tag;
-        }
     }
 }

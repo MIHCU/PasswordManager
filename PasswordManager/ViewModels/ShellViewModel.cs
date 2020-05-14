@@ -21,7 +21,7 @@ namespace PasswordManager.ViewModels
         {
             _eventAggregator = eventAggregator;
             _eventAggregator.Subscribe(this);
-            ActivateItem(new EntryViewModel(_eventAggregator));
+            ActivateItem(new MainViewModel(_eventAggregator));
         }
 
         public void Handle(ChangeToMainView message)

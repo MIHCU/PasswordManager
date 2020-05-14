@@ -1,5 +1,7 @@
-﻿using System;
+﻿using PasswordManager.Database;
+using System;
 using System.Data.SqlClient;
+using System.Numerics;
 using System.Windows;
 
 namespace PasswordManager
@@ -7,9 +9,11 @@ namespace PasswordManager
     internal class DatabaseWrap
     {
         private SqlConnection connection = null;
+        private MyRSA rsa;
 
         public DatabaseWrap()
         {
+            rsa = new MyRSA();
             ConnectToDatabase();
         }
 
@@ -23,22 +27,12 @@ namespace PasswordManager
             return false;
         }
 
-        //private Data Encrypt(Data dataToEncrypt)
-        //{
-            //TODO
-        //}
-
-        //private Data Decrypt(Data dataToDecrypt)
-        //{
-            //TODO
-        //}
-
+       
         private void ConnectToDatabase()
         {
             connection = new SqlConnection(@"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=E:\OneDrive\Projekty\PasswordManager\PasswordManager\Database\Database1.mdf;Integrated Security=True");
             connection.Open();
-            MessageBox.Show("Database Connected", "Database connection",
-               MessageBoxButton.OK, MessageBoxImage.Information);
+           
         }
 
         private void CloseConnection()
@@ -55,7 +49,11 @@ namespace PasswordManager
 
         public void AddData(Data newData)
         {
-            string query;
+           
+            Data encrpytedData = new Data(rsa.Encryption(newData.Login), rsa.Encryption(newData.Password), rsa.Encryption(newData.Tag), rsa.Encryption(newData.Notes));
+            string query = "INSERT INTO Data (login, password, tag, notes) " +
+                "values('"+ encrpytedData.Login +"', '"+ encrpytedData.Password + "', '"+ encrpytedData.Tag +"', '" + encrpytedData.Notes +"')";
+            SendQuery(query);
         }
 
         public void ModifyData(int id)
@@ -66,7 +64,8 @@ namespace PasswordManager
         public void DeleteData(Data dataToDelete)
         {
             
-            string query;
+            string query = "DELETE FROM Data WHERE Tag = '" + rsa.Encryption(dataToDelete.Tag) + "';";
+            SendQuery(query);
         }
 
 
@@ -99,5 +98,8 @@ namespace PasswordManager
             response.Close();
             return list;
         }
+
+       
+
     }
 }

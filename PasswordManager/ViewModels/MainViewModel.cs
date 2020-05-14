@@ -1,4 +1,5 @@
 ﻿using Caliburn.Micro;
+using PasswordManager.Database;
 using PasswordManager.Models;
 using System;
 using System.Collections.Generic;
@@ -12,6 +13,7 @@ namespace PasswordManager.ViewModels
 {
     class MainViewModel : Screen
     {
+        private MyRSA rsa;
         private DatabaseWrap databse;
         private BindableCollection<PasswordModel> _passwords = new BindableCollection<PasswordModel>();
         private ObservableCollection<CategoriesModel> _categories = new ObservableCollection<CategoriesModel>();
@@ -23,18 +25,20 @@ namespace PasswordManager.ViewModels
         public MainViewModel(IEventAggregator eventAggregator)
         {
             _eventAggregator = eventAggregator;
-            /*databse = new DatabaseWrap();
+            rsa = new MyRSA();
+            databse = new DatabaseWrap();
             dataList = databse.GetData();
             for (int i = 0; i < dataList.Size(); i++)
             {
                 Data temp = dataList.Give(i);
-                Passwords.Add(new PasswordModel { password = temp.Password, login = temp.Login, notes = temp.Notes, tag = temp.Tag });
-            }*/
+                Passwords.Add(new PasswordModel { password = rsa.Decryption(temp.Password), login = rsa.Decryption(temp.Login), 
+                    notes = rsa.Decryption(temp.Notes), tag = rsa.Decryption(temp.Tag) });
+            }
 
-            Passwords.Add(new PasswordModel { password = "password2", login = "log1", notes = "dagjhafgjhjkdfg", tag = "dsaasdasasdf" });
-            Passwords.Add(new PasswordModel { password = "password3", login = "emil", notes = "124325", tag = "adsfasdf" });
-            asdf.Add(new PasswordModel { password = "ccc", login = "cos", notes = "i", tag = "qwer" });
-            asdf.Add(new PasswordModel { password = "password7", login = "ktos", notes = "asdasdasd", tag = "ppp" });
+            //Passwords.Add(new PasswordModel { password = "password2", login = "log1", notes = "dagjhafgjhjkdfg", tag = "dsaasdasasdf" });
+            //Passwords.Add(new PasswordModel { password = "password3", login = "emil", notes = "124325", tag = "adsfasdf" });
+            //asdf.Add(new PasswordModel { password = "ccc", login = "cos", notes = "i", tag = "qwer" });
+            //asdf.Add(new PasswordModel { password = "password7", login = "ktos", notes = "asdasdasd", tag = "ppp" });
 
             CategoriesModel childCategory = new CategoriesModel() { Name = "root", Parent = null };
             CategoriesModel root = new CategoriesModel() { Name = "cos" };
@@ -43,8 +47,6 @@ namespace PasswordManager.ViewModels
             childCategory.Categories.Add(root);
             childCategory.passwords = asdf;
             Categories.Add(childCategory);
-
-            
         }
 
         public BindableCollection<PasswordModel> Passwords
@@ -120,7 +122,12 @@ namespace PasswordManager.ViewModels
                 MessageBoxButton.YesNo, MessageBoxImage.Question);
 
             if (result == MessageBoxResult.Yes)
+            {
+                Data dataToRemove = new Data(SelectedPassword.login, SelectedPassword.password, SelectedPassword.tag, SelectedPassword.notes);
+                databse.DeleteData(dataToRemove);
                 Passwords.Remove(SelectedPassword);
+            }
+                
         }
         public void AddEntry()
         {
