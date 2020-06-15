@@ -40,6 +40,6 @@
                  x:Name="Notes"/>
 
         <Button x:Name="Save" Grid.Column="2" Grid.Row="5" Content="Save" Width="100" Margin="87,0,119,0"/>
-        <Button Grid.Column="2" Grid.Row="5" Content="Cancel" Width="100" Margin="205,0,0,0"/>
+        <Button x:Name="Cancel" Grid.Column="2" Grid.Row="5" Content="Cancel" Width="100" Margin="205,0,0,0" IsCancel="True"/>
     </Grid>
 </UserControl>

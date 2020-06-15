@@ -24,5 +24,10 @@ namespace PasswordManager.Views
         {
             InitializeComponent();
         }
+
+        private void Save_Click()
+        {
+
+        }
     }
 }

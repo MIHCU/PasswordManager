@@ -15,7 +15,7 @@ namespace PasswordManager.ViewModels
         private string _tag;
         private string _notes;
         private Data dataToAdd;
-        private DatabaseWrap database;
+
         private readonly IEventAggregator _eventAggregator;
         public string Notes
         {
@@ -59,21 +59,18 @@ namespace PasswordManager.ViewModels
             if (!string.IsNullOrEmpty(_notes) && !string.IsNullOrEmpty(_ligin) && !string.IsNullOrEmpty(_password) && !string.IsNullOrEmpty(_tag))
             {
                 dataToAdd = new Data(_ligin, _password, _tag, _notes);
-                AddToDatabase(dataToAdd);
+                MainViewModel.dataList.Add(dataToAdd);
                 _eventAggregator.PublishOnUIThread(new ChangeToMainView());
             }
             else if (string.IsNullOrEmpty(_notes) || string.IsNullOrEmpty(_ligin) || string.IsNullOrEmpty(_password) || string.IsNullOrEmpty(_tag))
             {
-                MessageBox.Show("Musisz podać wszystkie dane", "Błąd", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
-            //MessageBox.Show(Login + Password);
-            
+                MessageBox.Show("You must fill all fields", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }   
         }
 
-        private void AddToDatabase(Data dataToAdd)
+       public void Cancel()
         {
-            database = new DatabaseWrap();
-            database.AddData(dataToAdd);
+            _eventAggregator.PublishOnUIThread(new ChangeToMainView());
         }
 
     }

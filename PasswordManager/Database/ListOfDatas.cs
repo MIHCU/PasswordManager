@@ -1,23 +1,40 @@
-﻿using System;
+﻿using PasswordManager.Database;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Serialization;
 
 namespace PasswordManager
 {
-    class ListOfDatas
+    public class ListOfDatas
     {
         List<Data> listOfDatas;
+        string XML;
+        MyRSA rsa;
 
         public ListOfDatas()
         {
-            listOfDatas = new List<Data>();
+            rsa = new MyRSA();
+            XML = "Passwords.xml";
+            if (File.Exists(XML))
+            {
+                listOfDatas = Deserialize();
+            }
+            else
+            {
+                listOfDatas = new List<Data>();
+            }
         }
 
-        public void Add(Data data)
+        public void Add(Data dataToAdd)
         {
-            listOfDatas.Add(data);
+            Data temp = new Data(rsa.Encryption(dataToAdd.Login), rsa.Encryption(dataToAdd.Password), 
+                rsa.Encryption(dataToAdd.Tag), rsa.Encryption(dataToAdd.Notes));
+            listOfDatas.Add(temp);
+            Serilize();
         }
 
         public Data Give(int index)
@@ -43,6 +60,25 @@ namespace PasswordManager
                 }
                 i++;
             }
+            Serilize();
+        }
+
+        public void Serilize()
+        {
+            XmlSerializer xmlFormat = new XmlSerializer(typeof(List<Data>));
+
+            using (Stream fstream = new FileStream(XML, FileMode.Create,
+                FileAccess.Write, FileShare.None))
+            {
+                xmlFormat.Serialize(fstream, listOfDatas);
+            }
+        }
+
+        public List<Data> Deserialize()
+        {
+            FileStream stream = new FileStream(XML, FileMode.Open);
+            XmlSerializer xmlFormat = new XmlSerializer(typeof(List<Data>));
+            return (List<Data>)xmlFormat.Deserialize(stream);
         }
     }
 }

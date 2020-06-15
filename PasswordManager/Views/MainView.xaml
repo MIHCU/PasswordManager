@@ -13,20 +13,6 @@
             <ColumnDefinition Width="auto"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
-
-        <TreeView x:Name="Categories"  Grid.Column="0" Margin="0,0,10,0" 
-                  cal:Message.Attach="[Event SelectedItemChanged] = [Action setSelectedCategory($this.SelectedItem)]">
-            <TreeView.ItemTemplate>
-                <HierarchicalDataTemplate DataType="{x:Type models:CategoriesModel}" ItemsSource="{Binding Categories}">
-                    <TextBlock  Text="{Binding Path=Name}" Padding="0,0,30,0"/>
-                </HierarchicalDataTemplate>
-            </TreeView.ItemTemplate>
-            <TreeView.ContextMenu>
-                <ContextMenu>
-                    <MenuItem Header="Delete Category" cal:Message.Attach="DeleteCategory()"/>
-                </ContextMenu>
-            </TreeView.ContextMenu>
-        </TreeView >
         <DataGrid x:Name="Passwords" Grid.Column="1" CanUserAddRows="False" 
                   AutoGenerateColumns="False" IsReadOnly="True" SelectionMode="Single" >
                 <DataGrid.Columns>
@@ -37,8 +23,8 @@
                 </DataGrid.Columns>
                 <DataGrid.ContextMenu>
                     <ContextMenu>
-                        <MenuItem Header="Coppy Password" cal:Message.Attach="CoppyPasswordToClipboard()"/>
-                        <MenuItem Header="Coppy Login" cal:Message.Attach="CoppyLoginToClipboard()"/>
+                        <MenuItem Header="Copy Password" cal:Message.Attach="CoppyPasswordToClipboard()"/>
+                        <MenuItem Header="Copy Login" cal:Message.Attach="CoppyLoginToClipboard()"/>
                         <MenuItem Header="Delete Entry" cal:Message.Attach="DeleteEntry()"/>
                         <MenuItem Header="Add Entry" cal:Message.Attach="AddEntry()"/>
                 </ContextMenu>
