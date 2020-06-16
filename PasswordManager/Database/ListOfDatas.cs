@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
 
-namespace PasswordManager
+namespace PasswordManager.Database
 {
     public class ListOfDatas
     {

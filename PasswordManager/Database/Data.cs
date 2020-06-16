@@ -1,4 +1,4 @@
-﻿namespace PasswordManager
+﻿namespace PasswordManager.Database
 {
     public class Data
     {

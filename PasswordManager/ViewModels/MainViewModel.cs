@@ -17,7 +17,6 @@ namespace PasswordManager.ViewModels
         private BindableCollection<PasswordModel> _passwords = new BindableCollection<PasswordModel>();
 
         private PasswordModel _selectedPassword;
-        private CategoriesModel _selectedCategorie;
 
         public static ListOfDatas dataList;
         private readonly IEventAggregator _eventAggregator;
@@ -45,20 +44,6 @@ namespace PasswordManager.ViewModels
             }
         }
 
-       
-
-        public CategoriesModel SelectedCategorie
-        {
-            get { return _selectedCategorie; }
-            set
-            {
-                _selectedCategorie = value;
-                if (SelectedCategorie != null)
-                    Passwords = SelectedCategorie.passwords;
-                NotifyOfPropertyChange(() => SelectedCategorie);
-            }
-        }
-
 
         public PasswordModel SelectedPassword
         {
@@ -82,25 +67,25 @@ namespace PasswordManager.ViewModels
                 Clipboard.SetText(_selectedPassword.login);
         }
 
-        public void setSelectedCategory(object item)
-        {
-            SelectedCategorie = (CategoriesModel)item;
-        }
 
-        
         public void DeleteEntry()
         {
-            var result = MessageBox.Show("Are you sure that you would like to delete the entry?", "Delete the entry",
-                MessageBoxButton.YesNo, MessageBoxImage.Question);
-
-            if (result == MessageBoxResult.Yes)
+            if (SelectedPassword != null)
             {
-                Data dataToRemove = new Data(rsa.Encryption(SelectedPassword.login), rsa.Encryption(SelectedPassword.password),
-                    rsa.Encryption(SelectedPassword.tag), rsa.Encryption(SelectedPassword.notes));
-                dataList.Delete(dataToRemove);
-                Passwords.Remove(SelectedPassword);
+
+                var result = MessageBox.Show("Are you sure that you would like to delete the entry?", "Delete the entry",
+                    MessageBoxButton.YesNo, MessageBoxImage.Question);
+
+                if (result == MessageBoxResult.Yes)
+                {
+                    Data dataToRemove = new Data(rsa.Encryption(SelectedPassword.login), rsa.Encryption(SelectedPassword.password),
+                        rsa.Encryption(SelectedPassword.tag), rsa.Encryption(SelectedPassword.notes));
+                    dataList.Delete(dataToRemove);
+                    Passwords.Remove(SelectedPassword);
+                }
+
             }
-                
+
         }
         public void AddEntry()
         {
